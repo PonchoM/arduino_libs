@@ -45,11 +45,13 @@ void UART_Init(uint8_t const baudrate) {
  */
 uint8_t UART_GetByte() {
   uint8_t tmp = 0;
+  cli();
   if(RX_N > 0) {
     tmp = RX_BUF[RX_Tail];
     RX_Tail = HardIncrPtr(RX_Tail);
     RX_N--;
   }
+  sei();
   return tmp;
 }
 
@@ -57,7 +59,10 @@ uint8_t UART_GetByte() {
  * @brief returns true if date is available, false otherwise
  */
 bool UART_IsDataAvailable() {
-  return (RX_N != 0);
+  cli();
+  bool const dataAvailable = (RX_N != 0);
+  sei();
+  return dataAvailable;
 }
 
 /**
@@ -67,6 +72,7 @@ bool UART_IsDataAvailable() {
  */
 void UART_WriteBytes(uint8_t const *data, uint8_t const size) {
   uint8_t i = 0;
+  cli();
   for(; i < size; i++) { 
     if(TX_N < TX_SIZE) {
       TX_BUF[TX_Head] = data[i];
@@ -74,6 +80,7 @@ void UART_WriteBytes(uint8_t const *data, uint8_t const size) {
       TX_Head = HardIncrPtr(TX_Head);
     }
   }
+  sei();
   UCSR0B |= (1<<UDRIE0); // enable transmission by enabling the uart data register empty interrupt
 }
 
