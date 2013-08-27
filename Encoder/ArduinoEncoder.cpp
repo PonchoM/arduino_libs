@@ -30,6 +30,7 @@ uint16_t get_pulse_count_encoder_2();
 Encoder::Encoder(encoder_pin const pin, encoder_options const options) : m_pin(pin) {
 	if(m_pin == ENCODER_1) config_encoder_1(options);
 	else if(m_pin == ENCODER_2) config_encoder_2(options);
+	sei(); // activate interrupts
 }
 	
 /**

@@ -37,6 +37,7 @@ void UART_Init(uint8_t const baudrate) {
   (1<<RXEN0)  | // enable receiver
   (1<<TXEN0);   // enable transmitter
   UBRR0 = baudrate;
+  sei(); // activate interrupts
 }
 
 /**

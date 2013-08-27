@@ -12,7 +12,6 @@
 
 void setup() {
   UART_Init(BAUD115200);
-  sei();
 }
 
 void loop() {
