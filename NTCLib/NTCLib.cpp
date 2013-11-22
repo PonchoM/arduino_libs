@@ -60,7 +60,13 @@ static uint16_t const table[table_size] = {
  */
 int16_t NTCLib::convert(uint16_t const adc_value) {
   for(int16_t i=1; i<table_size; i++) {
-    if(table[i-1] > adc_value && table[i] < adc_value) return ((i-1)*temp_step_size+start_temp);
+    if(table[i-1] > adc_value && table[i] < adc_value) {
+      float const diff_temp = (float)(temp_step_size);
+      float const diff_val = (float)(table[i]) - (float)(table[i-1]);
+      float const k = diff_temp/diff_val;
+      float const d = (float)(i*temp_step_size + start_temp) - k * (float)(table[i]);
+      return ((int16_t)((float)(adc_value) * k + d));
+    }
   }
   return 0;
 }
